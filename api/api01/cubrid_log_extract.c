@@ -8,14 +8,12 @@
 int
 main (int argc, char *argv[])
 {
-  char *host = "192.168.1.5";
-  char *dbname = "testdb";
-  int port = 15033;
+  char *host;
+  char *dbname;
+  int port;
+  int extraction_count;
 
-  time_t start_time = atoi(argv[1]);
-  int extraction_count = atoi(argv[2]);
-  int max_log_item = atoi(argv[3]);
-
+  time_t start_time = 1622548291; 
   uint64_t next_lsa = 0;
 
   CUBRID_LOG_ITEM *log_item_list;
@@ -26,26 +24,29 @@ main (int argc, char *argv[])
   int list_size = 0;
   int i, j, k;
 
-  if (argc != 4)
+  if (argc != 5)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
       exit (-1);
     }
 
-  if (cubrid_log_set_max_log_item (max_log_item) != CUBRID_LOG_SUCCESS)
-    {
-      printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
-      exit (-1);
-    }
-
+  host = argv[1];
+  port = atoi (argv[2]);
+  dbname = argv[3];
+  extraction_count = atoi (argv[4]);
 /*
   if (cubrid_log_set_all_in_cond (1) != CUBRID_LOG_SUCCESS)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
       exit (-1);
     }
-*/
 
+  if (cubrid_log_set_max_log_item (1) != CUBRID_LOG_SUCCESS)
+  {
+      printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
+      exit (-1);
+  }
+*/
   if (cubrid_log_connect_server (host, port, dbname) != CUBRID_LOG_SUCCESS)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
