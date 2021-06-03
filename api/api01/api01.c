@@ -9,8 +9,10 @@ main (int argc, char *argv[])
   char *host;
   char *dbname;
   int port;
+  int extraction_timeout;
+  int ret; 
 
-  if (argc != 4)
+  if (argc != 5)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
       exit (-1);
@@ -19,22 +21,15 @@ main (int argc, char *argv[])
   host = argv[1];
   port = atoi (argv[2]);
   dbname = argv[3];
-#if 1 
-  if (cubrid_log_set_extraction_timeout (370) != CUBRID_LOG_INVALID_EXTRACTION_TIMEOUT)
-    {
-      printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
-      exit (-1);
-    }
-#endif
+  extraction_timeout = atoi(argv[4]);
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-#if 0
-  if (cubrid_log_set_extraction_timeout (350) != CUBRID_LOG_SUCCESS)
+  ret = cubrid_log_set_extraction_timeout (extraction_timeout);
+  if (ret != CUBRID_LOG_SUCCESS)
     {
-      printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
+      printf ("[ERROR] %s:%d | return code : %d \n", __FILE__, __LINE__, ret);
       exit (-1);
     }
-#endif 
+
   if (cubrid_log_connect_server (host, port, dbname) != CUBRID_LOG_SUCCESS)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);

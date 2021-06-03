@@ -25,11 +25,13 @@ main (int argc, char *argv[])
 
   int list_size = 0;
   int i, j, k;
-  int ret = CUBRID_LOG_SUCCESS;
 
   int dml_count = 0;
   int insert_count = 0;
   int interval = 1;
+
+  int num_user = 1;
+  char *users = "JOO";
 
   if (argc != 7)
     {
@@ -43,11 +45,17 @@ main (int argc, char *argv[])
       exit (-1);
     }
 
-  if (cubrid_log_set_extraction_timeout (30) != CUBRID_LOG_SUCCESS)
-    {
+  if (cubrid_log_set_extraction_user (&users, num_user) != CUBRID_LOG_SUCCESS)
+  {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
       exit (-1);
-    }
+  }
+
+  if (cubrid_log_set_extraction_timeout (10) != CUBRID_LOG_SUCCESS)
+  {
+      printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
+      exit (-1);
+  }
 /*
   if (cubrid_log_set_all_in_cond (1) != CUBRID_LOG_SUCCESS)
     {
@@ -68,11 +76,10 @@ main (int argc, char *argv[])
       exit (-1);
     }
 
-  for (i = 0;; i++)
+  for (i = 0; i < extraction_count; i++)
     {
-      ret = cubrid_log_extract (&next_lsa, &log_item_list, &list_size);
-      if (ret != CUBRID_LOG_SUCCESS && ret != CUBRID_LOG_SUCCESS_WITH_NO_LOGITEM && ret != CUBRID_LOG_EXTRACTION_TIMEOUT)
-        {
+      if (cubrid_log_extract (&next_lsa, &log_item_list, &list_size) != CUBRID_LOG_SUCCESS)
+	{
 	  printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
 	  exit (-1);
 	}
@@ -135,7 +142,8 @@ main (int argc, char *argv[])
 		    }
                   if (data_item->dml.num_changed_column > 0)
                   {
-		    printf ("\t\tchanged_column_data[%d]: %d\n", 0, *(int*)data_item->dml.changed_column_data[0]);
+		    printf ("\t\tchanged_column_data[%d]: %s\n", 0, data_item->dml.changed_column_data[0]);
+		    printf ("\t\tchanged_column_data[%d]: %s\n", 1, data_item->dml.changed_column_data[1]);
                   }
                   printf ("\tnum_cond_column   : %d\n", data_item->dml.num_cond_column);
 
