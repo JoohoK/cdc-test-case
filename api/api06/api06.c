@@ -31,9 +31,6 @@ main (int argc, char *argv[])
   int insert_count = 0;
   int interval = 1;
 
-  int num_class =1;
-  uint64_t classoid = 25769803978;
-
   if (argc != 7)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
@@ -52,20 +49,11 @@ main (int argc, char *argv[])
       exit (-1);
     }
   
-  if (cubrid_log_set_extraction_table (&classoid, num_class) != CUBRID_LOG_SUCCESS)
-    {
-      printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
-      exit (-1);
-    }
-
-
-  /*
   if (cubrid_log_set_all_in_cond (1) != CUBRID_LOG_SUCCESS)
     {
       printf ("[ERROR] %s:%d\n", __FILE__, __LINE__);
       exit (-1);
     }
-*/
 
   if (cubrid_log_connect_server (host, port, dbname) != CUBRID_LOG_SUCCESS)
     {
